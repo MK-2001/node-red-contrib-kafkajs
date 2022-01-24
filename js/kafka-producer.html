@@ -23,7 +23,7 @@
     <div id="node-advancedoptions" class="form-row" style="margin-left:30px">
         <div class="form-row">
             <label for="node-input-acknowledge"><i class="fa fa-check-square "></i> Acks</label>
-            <select id="node-input-acknowledge">            
+            <select id="node-input-acknowledge">
                 <option value="all">ALL</option>
                 <option value="none">NONE</option>
                 <option value="leader">LEADER</option>
@@ -57,6 +57,11 @@
             <label for="node-input-allowautotopiccreation"><i class="fa fa-tag"></i> Allow Auto Topic Creation</label>
             <input type="checkbox" id="node-input-allowautotopiccreation">
         </div>
+        <div class="form-row">
+            <label for="node-input-pipeoutput"><i class="fa fa-tag"></i> Pipe message to output </label>
+            <input type="checkbox" id="node-input-pipeoutput">
+            <!-- to e.g. acknowledge messages-->
+        </div>
     </div>
 
 </script>
@@ -76,7 +81,8 @@
             responsetimeout: {value: 30000, required:false},
             transactiontimeout: {value: 60000, required:false},
             metadatamaxage: {value: 300000, required:false},
-            allowautotopiccreation: {value: false, require:false}
+            allowautotopiccreation: {value: false, require:false},
+            pipeoutput: {value: false, require: false}
         },
 	    inputs:1,
         inputLabels: "",
@@ -117,7 +123,7 @@
             for (const entry of Object.entries(this.headeritems)) {
                 $("#node-input-headers").editableList('addItem', entry);
             }
-            
+
             checkAdvancedOptions($("#node-input-advancedoptions").val());
             $('#node-input-advancedoptions').change(function(){
 				checkAdvancedOptions($(this).is(':checked'));
@@ -131,6 +137,12 @@
             items.each(function(i, val){
                 node.headeritems[val.find(".node-input-header-key").val()] = val.find(".node-input-header-value").val();
             });
+            if($("#node-input-pipeoutput").val()) {
+                node.outputs = 1;
+            } else {
+                node.outputs = 0;
+            }
+
         },
         oneditresize: function(size) {
 
